@@ -1,0 +1,127 @@
+@import "tailwindcss";
+/* Polices auto-hébergées : aucune requête vers un service tiers. */
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/fraunces/wght-italic.css";
+@import "@fontsource-variable/geist-mono";
+
+/*
+ * Charte ProductText — direction « Encre rouge »
+ * Papier ivoire, encre brun-noir, vermillon du correcteur (action + marque),
+ * surligneur jaune (mots-clés). Le vermillon n'est jamais utilisé pour signaler une erreur :
+ * les erreurs utilisent leur propre rouge, toujours accompagné d'une icône.
+ */
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Fraunces Variable", ui-serif, Georgia, serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-paper: #f7f4ee;
+  --color-paper-2: #efeae0;
+  --color-ink-50: #f5f3ef;
+  --color-ink-100: #ebe7e0;
+  --color-ink-200: #dcd6cc;
+  --color-ink-300: #c4bcae;
+  --color-ink-400: #9a9184;
+  --color-ink-500: #736b60;
+  --color-ink-600: #554e45;
+  --color-ink-700: #3b3630;
+  --color-ink-800: #26231f;
+  --color-ink-900: #1a1815;
+  --color-ink-950: #100f0d;
+
+  --color-vermilion-50: #fff3ee;
+  --color-vermilion-100: #ffe1d5;
+  --color-vermilion-200: #ffc2ab;
+  --color-vermilion-300: #ff9a76;
+  --color-vermilion-400: #f9703f;
+  --color-vermilion-500: #ef4f1a;
+  --color-vermilion-600: #d23d0c;
+  --color-vermilion-700: #ad2f0b;
+
+  --color-marker: #fde68a;
+
+  --shadow-card: 0 1px 0 rgb(26 24 21 / 0.03), 0 1px 2px -1px rgb(26 24 21 / 0.07), 0 10px 30px -14px rgb(26 24 21 / 0.12);
+  --shadow-lift: 0 1px 0 rgb(26 24 21 / 0.03), 0 2px 4px -2px rgb(26 24 21 / 0.08), 0 24px 50px -20px rgb(26 24 21 / 0.25);
+
+  --animate-fade-up: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+@keyframes caret {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@layer base {
+  html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+  body { background: var(--color-paper); color: var(--color-ink-900); text-rendering: optimizeLegibility; }
+  ::selection { background: var(--color-marker); color: var(--color-ink-950); }
+  :focus-visible { outline: 2px solid var(--color-vermilion-500); outline-offset: 2px; }
+  summary::-webkit-details-marker { display: none; }
+}
+
+@layer components {
+  /* Grain de papier très léger (SVG inline, aucune requête). */
+  .paper-grain {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 0 0.08 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  /* Lignes de cahier, pour les zones « brouillon ». */
+  .ruled {
+    background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 27px, rgb(26 24 21 / 0.06) 27px, rgb(26 24 21 / 0.06) 28px);
+  }
+  .dot-grid {
+    background-image: radial-gradient(rgb(26 24 21 / 0.12) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  /* Surligneur : trait irrégulier façon feutre. */
+  .marker {
+    background: linear-gradient(104deg, transparent 0.4em, var(--color-marker) 0.5em, var(--color-marker) 96%, transparent 100%) no-repeat 0 62% / 100% 62%;
+    border-radius: 0.2em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    padding: 0 0.12em;
+  }
+  .skeleton {
+    background: linear-gradient(90deg, var(--color-ink-100) 0%, var(--color-ink-50) 50%, var(--color-ink-100) 100%);
+    background-size: 200% 100%;
+    animation: var(--animate-shimmer);
+  }
+  .caret::after {
+    content: "";
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    margin-left: 2px;
+    vertical-align: -0.12em;
+    background: var(--color-vermilion-500);
+    animation: caret 1s steps(1) infinite;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: fade-up linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
